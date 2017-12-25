@@ -1,0 +1,17 @@
+{
+  "name": "react-observable-connect",
+  "version": "0.1.0",
+  "description": "Similar to react-redux's connect function, but allows you to make smart components using a transformation function and any observable source of data.",
+  "main": "index.js",
+  "author": "Kevin Johnson (kj800x) <kevin@kj800x.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kj800x/react-observable-connect"
+  },
+  "bugs": {
+    "url": "https://github.com/kj800x/react-observable-connect/issues"
+  },
+  "homepage": "https://github.com/kj800x/react-observable-connect#readme",
+  "keywords": []
+}
