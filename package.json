@@ -12,6 +12,10 @@
   "bugs": {
     "url": "https://github.com/kj800x/react-observable-connect/issues"
   },
+  "dependencies": {
+    "@types/react": "^16.0.31",
+    "react": "^16.2.0"
+  },
   "homepage": "https://github.com/kj800x/react-observable-connect#readme",
   "keywords": []
 }
