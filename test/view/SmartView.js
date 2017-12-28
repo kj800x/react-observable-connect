@@ -1,7 +1,7 @@
 import connect from "../../src/connect";
 import DumbView from "./DumbView";
 
-function mapObjectToValueProps(obj) {
+function objToValueProps(obj) {
   return {
     foo: obj.foo,
     bar: obj.bar,
@@ -10,12 +10,12 @@ function mapObjectToValueProps(obj) {
   }
 }
 
-function mapObjectToFunctionProps(obj) {
+function objToFuncProps(obj) {
   return {
     incrementN: obj.incrementN.bind(obj)
   }
 }
 
 export default function SmartView({model}) {
-  return connect(model, mapObjectToValueProps, mapObjectToFunctionProps)(DumbView)
+  return connect(model, objToValueProps, objToFuncProps)(DumbView)
 }

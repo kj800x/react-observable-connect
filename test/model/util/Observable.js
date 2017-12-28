@@ -1,4 +1,5 @@
-export default class Subscriber {
+// Implement a minimalist observable object, which has only what we need to test our method
+export default class Observable {
   constructor() {
     this.subscriptions = [];
   }

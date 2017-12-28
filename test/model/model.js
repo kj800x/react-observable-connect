@@ -1,9 +1,9 @@
-import Subscriber from './util/subscriber';
+import Observable from './util/Observable';
 
 class SampleModelObject {
 
   constructor() {
-    this.subscriber = new Subscriber();
+    this.observable = new Observable();
     this.foo = "";
     this.bar = "fizzbuzz";
     this.n = 3;
@@ -12,17 +12,17 @@ class SampleModelObject {
   }
 
   subscribe(fn) {
-    return this.subscriber.subscribe(fn);
+    return this.observable.subscribe(fn);
   }
 
   incrementN() {
     this.n += 1;
-    this.subscriber.trigger();
+    this.observable.trigger();
   }
 
   setUnrenderedValue(val) {
     this.unrenderedValue = val;
-    this.subscriber.trigger();
+    this.observable.trigger();
   }
 
 }

@@ -65,7 +65,7 @@ describe("connect", function () {
   it("shouldn't re-render if a function prop changes but not a value prop", function () {
     const model = generateSampleModelObject();
 
-    function mapObjectToValueProps(obj) {
+    function objToValueProps(obj) {
       return {
         foo: obj.foo,
         bar: obj.bar,
@@ -74,7 +74,7 @@ describe("connect", function () {
       }
     }
 
-    function mapObjectToFunctionProps(obj) {
+    function objToFuncProps(obj) {
       return {
         incrementN: obj.incrementN.bind(obj),
         getUnrenderedValue: function(obj) {return obj.unrenderedValue}.bind(obj)
@@ -82,7 +82,7 @@ describe("connect", function () {
     }
 
     function BadConnectedView({model}) {
-      return connect(model, mapObjectToValueProps, mapObjectToFunctionProps)(DumbView)
+      return connect(model, objToValueProps, objToFuncProps)(DumbView)
     }
 
     const renderCounter = new Counter();
@@ -114,22 +114,22 @@ describe("connect", function () {
        assertThrows(() => mount(<SmartView model={model}/>), "observableObject did not properly implement the observable "
                                                              + "interface (subscribe did not return an unsubscribe function)")
      }));
-  it("should throw an error if mapObjectToValueProps not a function",
+  it("should throw an error if objToValueProps not a function",
      suppressConsoleError(function () {
        const model = generateSampleModelObject();
        const BadComponent1 = function () {return connect(model)(DumbView)};
 
-       assertThrows(() => mount(<BadComponent1/>), "mapObjectToValueProps is not a function");
+       assertThrows(() => mount(<BadComponent1/>), "objToValueProps is not a function");
 
        const BadComponent2 = function () {return connect(model, 1)(DumbView)};
 
-       assertThrows(() => mount(<BadComponent2/>), "mapObjectToValueProps is not a function");
+       assertThrows(() => mount(<BadComponent2/>), "objToValueProps is not a function");
      }));
-  it("should throw an error if mapObjectToFunctionProps is defined an not a function",
+  it("should throw an error if objToFuncProps is defined an not a function",
      suppressConsoleError(function () {
        const model = generateSampleModelObject();
        const BadComponent = function () {return connect(model, function () {return {}}, 50)(DumbView)};
 
-       assertThrows(() => mount(<BadComponent/>), "mapObjectToFunctionProps is not a function");
+       assertThrows(() => mount(<BadComponent/>), "objToFuncProps is not a function");
      }));
 });
