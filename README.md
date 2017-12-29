@@ -31,7 +31,7 @@ interface Subscription {
 
 Recall the behavior of an Observable with the following quick example:
 
-```JavaScript
+```javascript
 // Model matches the Observable interface
 const model = new Model();
 
