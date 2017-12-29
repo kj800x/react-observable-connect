@@ -1,8 +1,8 @@
 {
   "name": "react-observable-connect",
   "version": "0.2.0",
-  "description": "Similar to react-redux's connect function, but allows you to make smart components using a transformation function and any observable source of data.",
-  "main": "src/connect.js",
+  "description": "react-observable-connect provides a way for you to connect the state of any Observable object to the props of your React components.",
+  "main": "index.js",
   "author": "Kevin Johnson (kj800x) <kevin@kj800x.com>",
   "license": "MIT",
   "repository": {
@@ -15,11 +15,11 @@
   "homepage": "https://github.com/kj800x/react-observable-connect#readme",
   "keywords": [],
   "dependencies": {
-    "@types/react": "^16.0.31",
     "deep-equal": "^1.0.1",
     "react": "^16.2.0"
   },
   "devDependencies": {
+    "@types/react": "^16.0.31",
     "@types/jest": "^21.1.10",
     "babel-jest": "^22.0.4",
     "babel-preset-es2015": "^6.24.1",

@@ -4,11 +4,11 @@ import Enzyme, {mount} from 'enzyme';
 import generateSampleModelObject from './model/model';
 import SmartView from './view/SmartView';
 import DumbView from './view/DumbView';
-import Counter from './Counter';
-import {assertBar, assertData, assertFoo, assertN, assertRenderCount, assertThrows} from "./asserts";
+import Counter from './util/Counter';
+import {assertBar, assertData, assertFoo, assertN, assertRenderCount, assertThrows} from "./util/asserts";
 
 import Adapter from 'enzyme-adapter-react-16';
-import connect from "../src/connect";
+import connect from "../index";
 
 Enzyme.configure({adapter: new Adapter()});
 
@@ -38,6 +38,7 @@ describe("connect", function () {
     assertData(rendered, "[2,3,5,7,11]");
     assertRenderCount(renderCounter, 2);
   });
+
   it("should re-render if a button who's callback changes the model is pressed", function () {
     const model = generateSampleModelObject();
     const renderCounter = new Counter();
@@ -51,6 +52,7 @@ describe("connect", function () {
     assertN(rendered, "4");
     assertRenderCount(renderCounter, 3);
   });
+
   it("shouldn't re-render if a prop that it doesn't care about changes", function () {
     const model = generateSampleModelObject();
     const renderCounter = new Counter();
@@ -62,6 +64,7 @@ describe("connect", function () {
 
     assertRenderCount(renderCounter, 2);
   });
+
   it("shouldn't re-render if a function prop changes but not a value prop", function () {
     const model = generateSampleModelObject();
 
@@ -81,12 +84,12 @@ describe("connect", function () {
       }
     }
 
-    function BadConnectedView({model}) {
+    function AltConnectedView({model}) {
       return connect(model, objToValueProps, objToFuncProps)(DumbView)
     }
 
     const renderCounter = new Counter();
-    mount(<BadConnectedView model={model} renderCounter={renderCounter}/>);
+    mount(<AltConnectedView model={model} renderCounter={renderCounter}/>);
 
     assertRenderCount(renderCounter, 2);
 
@@ -96,39 +99,60 @@ describe("connect", function () {
 
     assertRenderCount(renderCounter, 2);
   });
-  it("should throw an error if the observable object does not have a subscribe method",
+
+  it("should throw an error if the Observable object does not have a subscribe method",
      suppressConsoleError(function () {
        const model = {
          "subscribe": 1,
          "incrementN": function () {}
        }; // subscribe is not a method
-       assertThrows(() => mount(<SmartView model={model}/>), "observableObject did not properly implement the observable "
-                                                             + "interface (did not have a subscribe method)")
+       assertThrows(() => mount(<SmartView model={model}/>),
+         "observableObject did not properly implement the Observable interface "
+         + "(did not have a subscribe method)")
      }));
-  it("should throw an error if the observable object's subscribe does not return an unsubscribe function",
+
+  it("should throw an error if the Observable object's subscribe does not return an object containing an unsubscribe method",
      suppressConsoleError(function () {
        const model = {
-         "subscribe": function () {},
+         "subscribe": function () {}, // subscribe is a method which does not return an object containing an unsubscribe method
+                                      // (doesn't return anything)
          "incrementN": function () {}
-       }; // subscribe is a method which does not return a function
-       assertThrows(() => mount(<SmartView model={model}/>), "observableObject did not properly implement the observable "
-                                                             + "interface (subscribe did not return an unsubscribe function)")
+       };
+       assertThrows(() => mount(<SmartView model={model}/>),
+         "observableObject did not properly implement the Observable interface "
+         + "(subscribe did not return an object containing an unsubscribe method)");
+
+       const model2 = {
+         "subscribe": function () {return {}}, // subscribe is a method which does not return an object containing an unsubscribe method
+                                               // (returns an object without the correct method)
+         "incrementN": function () {}
+       };
+       assertThrows(() => mount(<SmartView model={model2}/>),
+         "observableObject did not properly implement the Observable interface "
+         + "(subscribe did not return an object containing an unsubscribe method)");
+
      }));
-  it("should throw an error if objToValueProps not a function",
+
+  it("should throw an error if objToValueProps is not a function",
      suppressConsoleError(function () {
        const model = generateSampleModelObject();
        const BadComponent1 = function () {return connect(model)(DumbView)};
 
-       assertThrows(() => mount(<BadComponent1/>), "objToValueProps is not a function");
+       assertThrows(() => mount(<BadComponent1/>),
+                    "objToValueProps is not a function");
 
        const BadComponent2 = function () {return connect(model, 1)(DumbView)};
 
-       assertThrows(() => mount(<BadComponent2/>), "objToValueProps is not a function");
+       assertThrows(() => mount(<BadComponent2/>),
+                    "objToValueProps is not a function");
      }));
-  it("should throw an error if objToFuncProps is defined an not a function",
+
+  it("should throw an error if objToFuncProps is defined and not a function",
      suppressConsoleError(function () {
        const model = generateSampleModelObject();
-       const BadComponent = function () {return connect(model, function () {return {}}, 50)(DumbView)};
+       const BadComponent = function () {return connect(model,
+                                                        function () {return {}},
+                                                        50)(DumbView)};
 
        assertThrows(() => mount(<BadComponent/>), "objToFuncProps is not a function");
      }));

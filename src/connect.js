@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import deepEqual from 'deep-equal';
+import Observable from './Observable';
 
 const OBSERVABLE_INVALID_UNSUBSCRIBE =
-  "observableObject did not properly implement the observable interface " +
-  "(subscribe did not return an unsubscribe function)";
+  "observableObject did not properly implement the Observable interface " +
+  "(subscribe did not return an object containing an unsubscribe method)";
 
 const OBSERVABLE_INVALID_SUBSCRIBE =
-  "observableObject did not properly implement the observable interface " +
+  "observableObject did not properly implement the Observable interface " +
   "(did not have a subscribe method)";
 
 const OTVP_NOT_OBJECT =
@@ -44,13 +45,14 @@ function ensureObject(maybeObj, errMsg) {
 }
 
 /**
- * Connect the state of an observableObject to the props of a react component (via a HOC's state).
+ * Connect the state of an observableObject to the props of a React component (via a HOC's state).
  *
  * The observableObject must expose a subscribe method which takes in a callback which is called whenever the observableObject's state changes.
- * The observableObject's subscribe method should return an unsubscribe method which can be called to unsubscribe the callback from the state changes.
+ * The observableObject's subscribe method should return an object containing an unsubscribe method which can be called to unsubscribe the
+ * callback from the state changes.
  *
  * objToValueProps should take in the observableObject and return an object. The object should be the value (non-functional) props that the
- * dumb component receives. The return value of this should be able to be compared by react to determine if the dumb component needs to be re-rendered.
+ * dumb component receives. The return value of this should be able to be compared by deepEqual to determine if the dumb component needs to be re-rendered.
  *
  * objToFuncProps should take in the observableObject and return an object. The object should be the function props that the dumb component receives.
  * Important! The return value of this function will not be compared to check for required state updates, so if you return a freshly bound version of the
@@ -58,12 +60,14 @@ function ensureObject(maybeObj, errMsg) {
  * will only be recomputed if the return value of objToValueProps changes.
  *
  *
- * @param observableObject an object that has a method named subscribe with the signature: (function callback) -> (function unsubscribe).
- *                         if the observableObject's state changes, then the callback function should be called.
- *                         if the unsubscribe function is called, then the observableObject should remove references to the callback and stop calling it.
+ * @param observableObject an object that has a method named subscribe with the signature: "subscribe(callback : Function) : Subscription", where Subscription
+ *                         is an object containing a method called "unsubscribe".
+ *                         - if the observableObject's state changes, then the callback function should be called.
+ *                         - if the unsubscribe function is called, then the observableObject should remove references to the callback and stop calling it on
+ *                         state changes.
  *
  * @param objToValueProps  a function that turns the observableObject into a set of props for the DumbComponent. These props should only be values
- *                         (comparable for equality).
+ *                         (comparable for equality using deepEqual).
  *
  * @param objToFuncProps   a function that turns the observableObject into a set of props for the DumbComponent. These props should only be functions.
  *
@@ -90,7 +94,9 @@ export default function(observableObject, objToValueProps, objToFuncProps) {
       trySubscribe() {
         if (!this.unsubscribe) {
           ensureFunction(observableObject.subscribe, OBSERVABLE_INVALID_SUBSCRIBE);
-          this.unsubscribe = observableObject.subscribe(this.handleChange.bind(this));
+          const subscription = observableObject.subscribe(this.handleChange.bind(this));
+          ensureObject(subscription, OBSERVABLE_INVALID_UNSUBSCRIBE);
+          this.unsubscribe = subscription.unsubscribe;
           ensureFunction(this.unsubscribe, OBSERVABLE_INVALID_UNSUBSCRIBE);
           this.handleChange();
         }

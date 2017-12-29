@@ -1,6 +1,11 @@
-import Observable from './util/Observable';
+import {Observable} from '../../index';
 
-class SampleModelObject {
+// This model is an (minimal) observable because it:
+// - Contains an observable as a field
+// - Delegates its subscribe method to the subscribe method of the observable.
+// - Calls this.observable.trigger() anytime the state changes.
+// Although this doesn't match the complete observable spec, it matches the requirements of react-observable-connect
+class Model {
 
   constructor() {
     this.observable = new Observable();
@@ -11,6 +16,9 @@ class SampleModelObject {
     this.unrenderedValue = 10;
   }
 
+  // I believe I could have also written:
+  //   this.subscribe = this.observable.subscribe.bind(this.observable)
+  // in the constructor instead of including this method.
   subscribe(fn) {
     return this.observable.subscribe(fn);
   }
@@ -27,6 +35,6 @@ class SampleModelObject {
 
 }
 
-export default function generateSampleModelObject() {
-  return new SampleModelObject();
+export default function generateSampleModel() {
+  return new Model();
 }
