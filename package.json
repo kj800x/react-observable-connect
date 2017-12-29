@@ -13,7 +13,7 @@
     "url": "https://github.com/kj800x/react-observable-connect/issues"
   },
   "homepage": "https://github.com/kj800x/react-observable-connect#readme",
-  "keywords": [],
+  "keywords": ["react", "observable", "connect", "HOC"],
   "dependencies": {
     "deep-equal": "^1.0.1",
     "react": "^16.2.0"
