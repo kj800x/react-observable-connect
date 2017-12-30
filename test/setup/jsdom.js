@@ -1,8 +1,9 @@
 // https://github.com/airbnb/enzyme/blob/master/docs/guides/jsdom.md
 
-const { JSDOM } = require('jsdom');
+const { JSDOM, VirtualConsole } = require('jsdom');
 
-const jsdom = new JSDOM('<!doctype html><html><body></body></html>');
+const nullConsole = new VirtualConsole();
+const jsdom = new JSDOM('<!doctype html><html><body></body></html>', {nullConsole});
 const { window } = jsdom;
 
 function copyProps(src, target) {
