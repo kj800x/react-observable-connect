@@ -3,3 +3,4 @@ test/*
 *.iml
 .babelrc
 .travis.yml
+src/*
