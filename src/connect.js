@@ -74,7 +74,7 @@ function ensureObject(maybeObj, errMsg) {
  * @returns {Function}     a function which takes one argument, the DumbComponent and returns a SmartComponent by passing the props from the observableObject
  *                         into it.
  */
-export default function(observableObject, objToValueProps, objToFuncProps) {
+export default function connect(observableObject, objToValueProps, objToFuncProps) {
 
   // If objToFuncProps is undefined use a function which returns an empty object as a default
   objToFuncProps = (typeof objToFuncProps === "undefined") ? (() => ({})) : objToFuncProps;
