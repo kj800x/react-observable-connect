@@ -111,7 +111,8 @@ You may not want the user of your smart component to provide the model itself. I
 
 ````javascript
 // Song objects are Observable and contain the data we want to render.
-// The SONG_STORE is a store for Songs. For this example, it has a byId method which returns the Song object for a given song id.
+// The SONG_STORE is a store for Songs. For this example, it has a byId
+// method which returns the Song object for a given song id.
 
 import SONG_STORE from './stores/song_store';
 
