@@ -1,4 +1,4 @@
-import {Observable} from '../../index';
+import {Observable} from '../../src/index';
 
 // This model is an (minimal) observable because it:
 // - Contains an observable as a field

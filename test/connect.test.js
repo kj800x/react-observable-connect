@@ -8,7 +8,7 @@ import Counter from './util/Counter';
 import {assertBar, assertData, assertFoo, assertN, assertRenderCount, assertThrows} from "./util/asserts";
 
 import Adapter from 'enzyme-adapter-react-16';
-import connect from "../index";
+import connect from "../src/index";
 
 Enzyme.configure({adapter: new Adapter()});
 

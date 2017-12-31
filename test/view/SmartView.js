@@ -1,4 +1,4 @@
-import connect from "../../src/connect";
+import connect from "../../src/index";
 import DumbView from "./DumbView";
 
 function objToValueProps(obj) {

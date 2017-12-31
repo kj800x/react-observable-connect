@@ -1,4 +1,4 @@
-import {Observable} from '../index';
+import {Observable} from '../src/index';
 import assert from 'assert';
 
 // Our implementation of observable is slightly different from the spec (the spec doesn't seem to support our use-case), although any spec-compliant observables
