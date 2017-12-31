@@ -2,7 +2,7 @@
   "name": "react-observable-connect",
   "version": "1.0.1",
   "description": "react-observable-connect provides a way for you to connect the state of any Observable object to the props of your React components.",
-  "main": "index.js",
+  "main": "lib/index.js",
   "author": "Kevin Johnson (kj800x) <kevin@kj800x.com>",
   "license": "MIT",
   "repository": {
