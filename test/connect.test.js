@@ -36,7 +36,7 @@ describe("connect", function () {
     assertBar(rendered, "fizzbuzz");
     assertN(rendered, "3");
     assertData(rendered, "[2,3,5,7,11]");
-    assertRenderCount(renderCounter, 2);
+    assertRenderCount(renderCounter, 1);
   });
 
   it("should re-render if a button who's callback changes the model is pressed", function () {
@@ -45,12 +45,12 @@ describe("connect", function () {
     const rendered = mount(<SmartView model={model} renderCounter={renderCounter}/>);
 
     assertN(rendered, "3");
-    assertRenderCount(renderCounter, 2);
+    assertRenderCount(renderCounter, 1);
 
     rendered.find(".incrementNButton").last().simulate('click');
 
     assertN(rendered, "4");
-    assertRenderCount(renderCounter, 3);
+    assertRenderCount(renderCounter, 2);
   });
 
   it("shouldn't re-render if a prop that it doesn't care about changes", function () {
@@ -58,11 +58,11 @@ describe("connect", function () {
     const renderCounter = new Counter();
     mount(<SmartView model={model} renderCounter={renderCounter}/>);
 
-    assertRenderCount(renderCounter, 2);
+    assertRenderCount(renderCounter, 1);
 
     model.setUnrenderedValue(70);
 
-    assertRenderCount(renderCounter, 2);
+    assertRenderCount(renderCounter, 1);
   });
 
   it("shouldn't re-render if a function prop changes but not a value prop", function () {
@@ -91,13 +91,13 @@ describe("connect", function () {
     const renderCounter = new Counter();
     mount(<AltConnectedView model={model} renderCounter={renderCounter}/>);
 
-    assertRenderCount(renderCounter, 2);
+    assertRenderCount(renderCounter, 1);
 
     // The function prop getUnrenderedValue depends on the model's unrenderedValue.
     // but because it's a function prop, the model shouldn't be re-rendered.
     model.setUnrenderedValue(20);
 
-    assertRenderCount(renderCounter, 2);
+    assertRenderCount(renderCounter, 1);
   });
 
   it("should throw an error if the Observable object does not have a subscribe method",

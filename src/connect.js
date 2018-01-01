@@ -86,7 +86,7 @@ export default function connect(observableObject, objToValueProps, objToFuncProp
       constructor(props) {
         super(props);
         this.state = {
-          valueProps: {}
+          valueProps: objToValueProps(observableObject)
         };
         this.unsubscribe = null;
       }
