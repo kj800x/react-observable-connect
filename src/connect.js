@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import deepEqual from 'deep-equal';
+import React, { Component } from "react";
+import deepEqual from "deep-equal";
 
 const OBSERVABLE_INVALID_UNSUBSCRIBE =
   "observableObject did not properly implement the Observable interface " +
@@ -9,14 +9,11 @@ const OBSERVABLE_INVALID_SUBSCRIBE =
   "observableObject did not properly implement the Observable interface " +
   "(did not have a subscribe method)";
 
-const OBSERVABLE_NOT_TRUTHY =
-  "observableObject was not truthy";
+const OBSERVABLE_NOT_TRUTHY = "observableObject was not truthy";
 
-const OTVP_NOT_OBJECT =
-  "objToValueProps did not return an object";
+const OTVP_NOT_OBJECT = "objToValueProps did not return an object";
 
-const OTFP_NOT_OBJECT =
-  "objToFuncProps did not return an object";
+const OTFP_NOT_OBJECT = "objToFuncProps did not return an object";
 
 /**
  * Merge objects a and b and return a new object with the merged result. If a and b both have the same key, the value for b will be used in the result.
@@ -35,13 +32,13 @@ function mergeObjects(a, b) {
 }
 
 function ensureFunction(maybeFunc, errMsg) {
-  if (typeof(maybeFunc) !== "function") {
+  if (typeof maybeFunc !== "function") {
     throw new Error(errMsg);
   }
 }
 
 function ensureObject(maybeObj, errMsg) {
-  if (typeof(maybeObj) !== "object") {
+  if (typeof maybeObj !== "object") {
     throw new Error(errMsg);
   }
 }
@@ -76,19 +73,21 @@ function ensureObject(maybeObj, errMsg) {
  * @returns {Function}     a function which takes one argument, the DumbComponent and returns a SmartComponent by passing the props from the observableObject
  *                         into it.
  */
-export default function connect(observableObject, objToValueProps, objToFuncProps) {
-
+export default function connect(
+  observableObject,
+  objToValueProps,
+  objToFuncProps
+) {
   // If objToFuncProps is undefined use a function which returns an empty object as a default
-  objToFuncProps = (typeof objToFuncProps === "undefined") ? (() => ({})) : objToFuncProps;
+  objToFuncProps =
+    typeof objToFuncProps === "undefined" ? () => ({}) : objToFuncProps;
 
   if (!observableObject) {
-    throw new Error(OBSERVABLE_NOT_TRUTHY)
+    throw new Error(OBSERVABLE_NOT_TRUTHY);
   }
 
   return function(DumbComponent) {
-
     class SmartComponent extends Component {
-
       constructor(props) {
         super(props);
         this.state = {
@@ -99,8 +98,13 @@ export default function connect(observableObject, objToValueProps, objToFuncProp
 
       trySubscribe() {
         if (!this.unsubscribe) {
-          ensureFunction(observableObject.subscribe, OBSERVABLE_INVALID_SUBSCRIBE);
-          const subscription = observableObject.subscribe(this.handleChange.bind(this));
+          ensureFunction(
+            observableObject.subscribe,
+            OBSERVABLE_INVALID_SUBSCRIBE
+          );
+          const subscription = observableObject.subscribe(
+            this.handleChange.bind(this)
+          );
           ensureObject(subscription, OBSERVABLE_INVALID_UNSUBSCRIBE);
           this.unsubscribe = subscription.unsubscribe;
           ensureFunction(this.unsubscribe, OBSERVABLE_INVALID_UNSUBSCRIBE);
@@ -111,12 +115,12 @@ export default function connect(observableObject, objToValueProps, objToFuncProp
       tryUnsubscribe() {
         if (this.unsubscribe) {
           this.unsubscribe();
-          this.unsubscribe = null
+          this.unsubscribe = null;
         }
       }
 
       componentDidMount() {
-        this.trySubscribe()
+        this.trySubscribe();
       }
 
       componentWillUnmount() {
@@ -125,14 +129,14 @@ export default function connect(observableObject, objToValueProps, objToFuncProp
 
       handleChange() {
         if (!this.unsubscribe) {
-          return
+          return;
         }
 
         const newValueProps = objToValueProps(observableObject);
         ensureObject(newValueProps, OTVP_NOT_OBJECT);
 
         if (!deepEqual(newValueProps, this.state.valueProps)) {
-          this.setState({valueProps: newValueProps});
+          this.setState({ valueProps: newValueProps });
         }
       }
 
@@ -140,16 +144,16 @@ export default function connect(observableObject, objToValueProps, objToFuncProp
         // Merge this element's props, the value props, and the func props all into one allProps.
         const funcProps = objToFuncProps(observableObject);
         ensureObject(funcProps, OTFP_NOT_OBJECT);
-        const allProps = mergeObjects(mergeObjects(this.props, this.state.valueProps), funcProps);
+        const allProps = mergeObjects(
+          mergeObjects(this.props, this.state.valueProps),
+          funcProps
+        );
 
         // Create a DumbComponent using allProps
-        return React.createElement(DumbComponent,
-                                   allProps);
+        return React.createElement(DumbComponent, allProps);
       }
     }
 
     return new SmartComponent();
-
-  }
-
+  };
 }

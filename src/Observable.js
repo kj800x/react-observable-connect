@@ -30,11 +30,10 @@ export default class Observable {
   subscribe(func) {
     this.subscriptions.push(func);
     return {
-      "unsubscribe":
-        () => {
-          this.subscriptions.indexOf(func) !== -1 &&
-          this.subscriptions.splice(this.subscriptions.indexOf(func), 1)
-        }
-    }
+      unsubscribe: () => {
+        this.subscriptions.indexOf(func) !== -1 &&
+          this.subscriptions.splice(this.subscriptions.indexOf(func), 1);
+      }
+    };
   }
 }
