@@ -100,6 +100,12 @@ describe("connect", function () {
     assertRenderCount(renderCounter, 1);
   });
 
+  it("should throw an error if the Observable object is not defined", suppressConsoleError(function() {
+    assertThrows(
+      () => mount(<SmartView model={undefined} />),
+      "observableObject was not truthy")
+  }))
+
   it("should throw an error if the Observable object does not have a subscribe method",
      suppressConsoleError(function () {
        const model = {

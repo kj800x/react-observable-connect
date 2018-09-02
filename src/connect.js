@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import deepEqual from 'deep-equal';
-import Observable from './Observable';
 
 const OBSERVABLE_INVALID_UNSUBSCRIBE =
   "observableObject did not properly implement the Observable interface " +
@@ -9,6 +8,9 @@ const OBSERVABLE_INVALID_UNSUBSCRIBE =
 const OBSERVABLE_INVALID_SUBSCRIBE =
   "observableObject did not properly implement the Observable interface " +
   "(did not have a subscribe method)";
+
+const OBSERVABLE_NOT_TRUTHY =
+  "observableObject was not truthy";
 
 const OTVP_NOT_OBJECT =
   "objToValueProps did not return an object";
@@ -78,6 +80,10 @@ export default function connect(observableObject, objToValueProps, objToFuncProp
 
   // If objToFuncProps is undefined use a function which returns an empty object as a default
   objToFuncProps = (typeof objToFuncProps === "undefined") ? (() => ({})) : objToFuncProps;
+
+  if (!observableObject) {
+    throw new Error(OBSERVABLE_NOT_TRUTHY)
+  }
 
   return function(DumbComponent) {
 

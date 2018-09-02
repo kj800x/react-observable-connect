@@ -26,5 +26,4 @@ export function assertThrows(fn, errMsg) {
     assert.equal(err.message, errMsg);
     return true;
   })
-
 }
