@@ -4,3 +4,4 @@ test/*
 .babelrc
 .travis.yml
 src/*
+package-lock.json
