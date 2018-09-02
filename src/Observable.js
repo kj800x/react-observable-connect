@@ -23,8 +23,8 @@ export default class Observable {
     this.subscriptions = [];
   }
 
-  trigger() {
-    this.subscriptions.forEach(e => e());
+  trigger(...args) {
+    this.subscriptions.forEach(e => e(...args));
   }
 
   subscribe(func) {

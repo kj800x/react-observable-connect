@@ -116,6 +116,21 @@ describe("Observable", function() {
 
     assert.equal(callbacksCalledCount.a, 5);
     assert.equal(callbacksCalledCount.b, 2);
-
   });
+
+  it("should call callbacks with the arguments that were passed to trigger", function() {
+    const obs = new Observable();
+    const calls = [];
+
+    obs.subscribe((a, b) => {
+      calls.push(a);
+      calls.push(b);
+    });
+
+    obs.trigger("a", 1);
+    obs.trigger("b", 2);
+    obs.trigger("c", 3);
+
+    assert.deepEqual(calls, ["a", 1, "b", 2, "c", 3])
+  })
 });
